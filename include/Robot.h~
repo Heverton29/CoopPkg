@@ -1,0 +1,81 @@
+/**
+ *  Robot.h
+ *
+ *  Version: 1.0.0.0
+ *  Created on: 20/05/2015
+ *  Modified on: 04/08/2015
+ *  Author: Heverton Machado Soares (sm.heverton@gmail.com)
+ *  Maintainer: Expertinos UNIFEI (expertinos.unifei@gmail.com)
+ */
+
+#ifndef ROBOT_H_
+#define ROBOT_H_
+
+#include <ros/ros.h>
+#include <string>
+#include <vector>
+#include "coop_pkg/Robot.h"
+#include <geometry_msgs/Pose2D.h>
+#include "Skill.h"
+#include "Task.h"
+#include "coop_pkg/Skill.h"
+#include "coop_pkg/Resource.h"
+
+#define MAX_SILENCE_DURATION 5
+
+class Robot {
+
+public:
+
+	Robot();
+	Robot(std::string ns, std::string name, int id, bool busy, std::vector<Skill> skills);
+	Robot(const coop_pkg::Robot::ConstPtr& msg);
+	~Robot();
+
+	void setNamespace(std::string ns);
+	std::string getNamespace();
+	
+	void setName(std::string);
+	std::string getName();
+
+	void setId(int id);
+	int getId();
+
+	void setBusy(bool busy);
+	bool getBusy();
+
+	void setPose(geometry_msgs::Pose2D pose);
+	geometry_msgs::Pose2D getPose();
+
+	void setSkills(std::vector<Skill> skills);
+	std::vector<Skill> getSkills();
+	bool addSkill(Skill skill);
+	bool removeSkill(Skill skill);
+
+	coop_pkg::Robot toMsg();
+	bool hasSkill(Skill skill);
+	bool hasAtLeastOneSkill(Task task);
+	bool hasAllSkills(Task task);	
+	double calculateFitness(Skill skill);
+	double calculateFitness(Task task);
+	bool isTheBest(std::vector<Robot> robots, Task task);
+
+
+	bool operator==(const Robot& robot);
+	bool operator!=(const Robot& robot);
+
+	ros::Time getTimeStamp();
+	void setTimeStamp(ros::Time time_stamp);
+	bool isStillLogged();
+	
+private:
+	std::string ns_;
+	std::string name_;
+	int id_;
+	bool busy_;
+	geometry_msgs::Pose2D pose_;
+	std::vector<Skill> skills_;
+	ros::Time time_stamp_;
+};
+
+#endif /* ROBOT_H_ */

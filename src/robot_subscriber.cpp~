@@ -1,0 +1,20 @@
+#include "ros/ros.h"
+#include "coop_pkg/Robot.h"
+
+void chatterCallback(const coop_pkg::Robot msg)
+{
+  ROS_INFO("I heard: [%s]", msg.name.c_str());
+}
+
+int main(int argc, char **argv)
+{
+  ros::init(argc, argv, "listener");
+
+  ros::NodeHandle n;
+
+  ros::Subscriber sub = n.subscribe("/amigobot/2/info_robot", 1, chatterCallback);
+
+  ros::spin();
+
+  return 0;
+}

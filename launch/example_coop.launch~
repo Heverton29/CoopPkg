@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+	<include file="$(find coop_pkg)/launch/coop_node.launch">
+	</include>
+	<include file="$(find coop_pkg)/launch/r0.launch">
+	</include>
+	<include file="$(find coop_pkg)/launch/r1.launch">
+	</include>
+	<include file="$(find coop_pkg)/launch/r2.launch">
+	</include>
+	<include file="$(find coop_pkg)/launch/r3.launch">
+	</include>
+	<include file="$(find coop_pkg)/launch/r4.launch">
+	</include>
+	<include file="$(find coop_pkg)/launch/r5.launch">
+	</include>
+	<include file="$(find coop_pkg)/launch/r6.launch">
+	</include>
+	<include file="$(find coop_pkg)/launch/r7.launch">
+	</include>
+	<include file="$(find coop_pkg)/launch/r8.launch">
+	</include>
+	<include file="$(find coop_pkg)/launch/r9.launch">
+	</include>
+</launch>

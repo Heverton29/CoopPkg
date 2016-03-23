@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+	<group ns="robot4">
+		<include file="$(find coop_pkg)/launch/robot_node.launch">
+			<arg name="_ns" value="robot4/"/>
+			<arg name="_name" value="robotname4"/>
+			<arg name="_id" value="115"/>
+			<arg name="_busy" value="false"/>
+			<arg name="_skill_level_0" value="8"/>
+			<arg name="_skill_resource_id_0" value="111"/>
+			<arg name="_skill_resource_name_0" value="velocidade"/>
+			<arg name="_skill_resource_description_0" value="velocidade do robo"/>
+			<arg name="_skill_level_1" value="2"/>
+			<arg name="_skill_resource_id_1" value="112"/>
+			<arg name="_skill_resource_name_1" value="forca"/>
+			<arg name="_skill_resource_description_1" value="capacidade do robo de empurrar objetos"/>
+			<arg name="_skill_level_2" value="5"/>
+			<arg name="_skill_resource_id_2" value="114"/>
+			<arg name="_skill_resource_name_2" value="visao"/>
+			<arg name="_skill_resource_description_2" value="capacidade do robo de enxergar atraves de cameras"/>
+		</include>
+	</group>
+</launch>

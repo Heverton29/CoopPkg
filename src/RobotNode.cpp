@@ -1,0 +1,191 @@
+/**
+ *  RobotNode.cpp
+ *
+ *  Version: 1.0.0.0
+ *  Created on: 09/08/2015
+ *  Modified on: ../08/2015
+ *  Author: Heverton Machado Soares (sm.heverton@gmail.com)
+ *  Maintainer: Expertinos UNIFEI (expertinos.unifei@gmail.com)
+ */
+
+#include "RobotNode.h"
+
+RobotNode::RobotNode(ros::NodeHandle nh) {	
+	readParameters();
+	setRobot(ns_, name_, id_, busy_, skills_);
+	ROS_INFO("ns: %s", ns_.c_str());
+	ROS_INFO("ns robot: %s", robot_.getNamespace().c_str());
+	info_robot_pub_ = nh_.advertise<coop_pkg::Robot>("/robots/info", 1);
+	odom_sub_ = nh_.subscribe("/" + ns_ + "odom", 1, &RobotNode::odometryCallback, this);
+	add_skill_srv_ = nh_.advertiseService("add_skill", &RobotNode::addSkill, this);
+	set_busy_srv_ = nh_.advertiseService("set_busy", &RobotNode::setBusy, this);
+}
+
+/**
+ *
+ */
+RobotNode::RobotNode(ros::NodeHandle nh, Robot robot, std::string ns) :
+	robot_(robot)
+{
+	nh_ = nh;
+	ns_ = ns;	
+	odom_setted_ = false;
+	info_robot_pub_ = nh.advertise<coop_pkg::Robot>("/robots/info", 1);
+	odom_sub_ = nh.subscribe("/odom", 1, &RobotNode::odometryCallback, this);
+	add_skill_srv_ = nh_.advertiseService("add_skill", &RobotNode::addSkill, this);
+}
+
+/**
+ *
+ */
+RobotNode::~RobotNode() {
+	info_robot_pub_.shutdown();
+	odom_sub_.shutdown();
+	add_skill_srv_.shutdown();
+}
+
+/**
+ *
+ */
+void RobotNode::spin() {
+	ROS_INFO("Robot up and running!!! %s", name_.c_str());
+	ros::Rate loop_rate(10.0);
+	while (nh_.ok()) {
+		publishInfoRobot();
+		spinOnce();
+		loop_rate.sleep();
+	}
+}
+
+/**
+ *
+ */
+bool RobotNode::setBusy(coop_pkg::SetBusy::Request &req, coop_pkg::SetBusy::Response &res)
+{
+	robot_.setBusy(req.busy);
+	return true;
+}
+
+/**
+ *
+ */
+bool RobotNode::addSkill(coop_pkg::AddSkill::Request &req, coop_pkg::AddSkill::Response &res)
+{
+	Skill skill(req.skill);
+	return robot_.addSkill(skill);
+}
+
+/**
+ *
+ */
+void RobotNode::spinOnce() {
+	ros::spinOnce();
+}
+
+/**
+ *
+ */
+void RobotNode::publishInfoRobot() {
+	robot_.setTimeStamp(ros::Time::now());
+	info_robot_pub_.publish(robot_.toMsg());
+}
+
+/**
+ *
+ */
+void RobotNode::setRobot(std::string ns, std::string name, int id, bool busy, std::vector<Skill> skills) {
+	robot_.setNamespace(ns);
+	robot_.setName(name);
+	robot_.setId(id);
+	robot_.setBusy(busy);
+	robot_.setSkills(skills);
+}
+
+
+/**
+ *
+ */
+void RobotNode::odometryCallback(const nav_msgs::Odometry::ConstPtr& msg) {
+	curr_x_ = msg->pose.pose.position.x;
+	curr_y_ = msg->pose.pose.position.y;
+	curr_phi_ = tf::getYaw(msg->pose.pose.orientation);
+	if (!odom_setted_) {
+		ROS_INFO("Odometry initialized!!!");
+		odom_setted_ = true;
+		prev_phi_ = curr_phi_;
+	}
+	disp_x_ = (curr_x_ - start_x_) * cos(-start_phi_) - (curr_y_ - start_y_) * sin(-start_phi_);
+	disp_y_ = (curr_y_ - start_y_) * cos(-start_phi_) + (curr_x_ - start_x_) * sin(-start_phi_);
+	while (curr_phi_ - prev_phi_ < PI) {
+		curr_phi_ += 2 * PI;
+	}
+	while (curr_phi_ - prev_phi_ > PI) {
+		curr_phi_ -= 2 * PI;
+	}
+	disp_phi_ += curr_phi_ - prev_phi_;
+	prev_phi_ = curr_phi_;
+}
+
+/**
+ *
+ */
+void RobotNode::resetOdometry() {
+	start_x_ = curr_x_;
+	start_y_ = curr_y_;
+	start_phi_ = curr_phi_;
+	disp_x_ = 0.0;
+	disp_y_ = 0.0;
+	disp_phi_ = 0.0;
+}
+
+
+void RobotNode::readParameters() {
+	nh_.param<std::string>("robot_node/ns", ns_, "");
+	nh_.param<std::string>("robot_node/name", name_, "");
+	nh_.param<int>("robot_node/id", id_, 00);
+	nh_.param<bool>("robot_node/busy", busy_, false);
+	std::stringstream aux;
+	aux << "robot_node/skill_level_0";
+	for (int i = 0; nh_.hasParam(aux.str()); i++) {
+		aux.str("");
+		int resource_id;
+		aux << "robot_node/skill_resource_id_" << i;
+		nh_.param<int>(aux.str(), resource_id, 0);
+		if(resource_id == 0){
+			break;
+		}
+
+		aux.str("");
+		std:: string resource_name;
+		aux << "robot_node/skill_resource_name_" << i;
+		nh_.param<std::string>(aux.str(), resource_name, "");
+
+		aux.str("");
+		std::string resource_description;
+		aux << "robot_node/skill_resource_description_" << i;
+		nh_.param<std::string>(aux.str(), resource_description, "");
+
+		aux.str("");
+		int skill_level;
+		aux << "robot_node/skill_level_" << i;
+		nh_.param<int>(aux.str(), skill_level, 0);
+
+		Resource skill_resource(resource_name, resource_id, resource_description);
+		Skill skill(skill_resource, skill_level);
+		skills_.push_back(skill); 
+
+		aux.str("");
+		aux << "robot_node/skill_level_" << i + 1;
+	}
+	/*for (int i = 0; i < skills_.size(); i++) {
+		Skill skill = skills_.at(i);
+		Resource resource = skill.getResource();
+		ROS_INFO("Skill %d: [%d] %d - %s : %s", i, skill.getLevel(), resource.getId(), resource.getName().c_str(), resource.getDescription().c_str());
+	}*/
+} 
+
+std::string RobotNode::getNamespace() {
+	return ns_;
+}
+
+

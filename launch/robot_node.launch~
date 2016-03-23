@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="_ns" default=""/>
+	<arg name="_name" default=""/>
+	<arg name="_id" default="00"/>
+	<arg name="_busy" default="false"/>
+	<arg name="_skill_level_0" default=""/>
+	<arg name="_skill_resource_id_0" default=""/>
+	<arg name="_skill_resource_name_0" default=""/>
+	<arg name="_skill_resource_description_0" default=""/>
+	<arg name="_skill_level_1" default=""/>
+	<arg name="_skill_resource_id_1" default=""/>
+	<arg name="_skill_resource_name_1" default=""/>
+	<arg name="_skill_resource_description_1" default=""/>
+	<arg name="_skill_level_2" default=""/>
+	<arg name="_skill_resource_id_2" default=""/>
+	<arg name="_skill_resource_name_2" default=""/>
+	<arg name="_skill_resource_description_2" default=""/>
+	<arg name="_skill_level_3" default=""/>
+	<arg name="_skill_resource_id_3" default=""/>
+	<arg name="_skill_resource_name_3" default=""/>
+	<arg name="_skill_resource_description_3" default=""/>
+	<arg name="_skill_level_4" default=""/>
+	<arg name="_skill_resource_id_4" default=""/>
+	<arg name="_skill_resource_name_4" default=""/>
+	<arg name="_skill_resource_description_4" default=""/>
+	<node name="robot_node" pkg="coop_pkg" type="robot_node" output="screen">
+		<param name="ns" value="$(arg _ns)" />
+		<param name="name" value="$(arg _name)" />
+		<param name="id" value="$(arg _id)" />
+		<param name="busy" value="$(arg _busy)" />
+		<param name="skill_level_0" value="$(arg _skill_level_0)" />
+		<param name="skill_resource_id_0" value="$(arg _skill_resource_id_0)" />
+		<param name="skill_resource_name_0" value="$(arg _skill_resource_name_0)" />
+		<param name="skill_resource_description_0" value="$(arg _skill_resource_description_0)" />
+		<param name="skill_level_1" value="$(arg _skill_level_1)" />
+		<param name="skill_resource_id_1" value="$(arg _skill_resource_id_1)" />
+		<param name="skill_resource_name_1" value="$(arg _skill_resource_name_1)" />
+		<param name="skill_resource_description_1" value="$(arg _skill_resource_description_1)" />
+		<param name="skill_level_2" value="$(arg _skill_level_2)" />
+		<param name="skill_resource_id_2" value="$(arg _skill_resource_id_2)" />
+		<param name="skill_resource_name_2" value="$(arg _skill_resource_name_2)" />
+		<param name="skill_resource_description_2" value="$(arg _skill_resource_description_2)" />
+		<param name="skill_level_3" value="$(arg _skill_level_3)" />
+		<param name="skill_resource_id_3" value="$(arg _skill_resource_id_3)" />
+		<param name="skill_resource_name_3" value="$(arg _skill_resource_name_3)" />
+		<param name="skill_resource_description_3" value="$(arg _skill_resource_description_3)" />
+	</node>
+</launch>

@@ -1,0 +1,77 @@
+/**
+ *  Coop.h
+ *
+ *  Version: 1.0.0.0
+ *  Created on: 02/07/2015
+ *  Modified on: 04/08/2015
+ *  Author: Heverton Machado Soares (sm.heverton@gmail.com)
+ *  Maintainer: Expertinos UNIFEI (expertinos.unifei@gmail.com)
+ */
+
+#ifndef COOP_H_
+#define COOP_H_
+
+#include "Robot.h"
+#include "Task.h"
+#include "TaskState.h"
+#include "RobotsPerTask.h"
+#include <vector>
+#include <ros/ros.h>
+#include "coop_pkg/Robot.h"
+#include "coop_pkg/Task.h"
+#include "coop_pkg/SetBusy.h"
+
+class Coop {
+
+public:
+
+	Coop(ros::NodeHandle nh);
+	~Coop();
+
+	void spin();
+	void spinOnce();
+
+protected:
+	
+
+private:
+
+	ros::NodeHandle nh_;
+
+	int number_of_completed_tasks_;
+	std::vector<Robot> robots_;
+	std::vector<Robot> competing_robots_;
+	std::vector<Task> tasks_;
+	std::vector<RobotsPerTask> robots_per_tasks_;
+	ros::Subscriber info_robot_sub_;
+	ros::Subscriber info_task_sub_;
+	ros::Publisher task_state_pub_;
+	std::vector<ros::ServiceClient> set_busy_clis_;
+
+	void readParameters();
+
+	int getNumberOfCompletedTasks();
+	
+	bool addRobot(Robot robot);
+	bool removeRobot(Robot robot);
+	std::vector<Robot> getRobots();
+	void checkLoggedRobots();
+	void checkIddleRobots();
+	bool assignRobots(Task task);
+	void alocateRobotForATask(std::vector<Robot> robots, Task task);
+	void separatePossibleRobots(std::vector<Robot> robots, Task task);
+	
+	bool addTask(Task task);
+	bool removeTask(Task task);
+	std::vector<Task> getTasks();
+	void publishTaskState();
+	void checkTasks();
+	
+	std::vector<RobotsPerTask> getRobotsPerTasks();	
+	
+	void infoRobotCallback(const coop_pkg::Robot::ConstPtr& msg);
+	void infoTaskCallback(const coop_pkg::Task::ConstPtr& msg);
+
+};
+
+#endif /* COOP_H_ */

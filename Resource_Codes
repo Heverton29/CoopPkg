@@ -1,0 +1,4 @@
+Velocidade	111	velocidade do robo
+força		112	capacidade do robo de empurrar objetos
+inteligencia	113	capacidade do robo de realizar tarefas interagindo com outros robos
+visao		114	capacidade do robo de enxergar atraves de cameras

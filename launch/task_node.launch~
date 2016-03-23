@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+	<node name="coop_node" pkg="coop_pkg" type="coop_node" output="screen">
+	</node>
+</launch>

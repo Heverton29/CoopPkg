@@ -1,0 +1,38 @@
+/**
+ *  ArenaUnifei.h
+ *
+ *  Version: 1.0.0.0
+ *  Created on: 20/05/2015
+ *  Modified on: 20/05/2015
+ *  Author: Heverton Machado Soares (sm.heverton@gmail.com)
+ *  Maintainer: Expertinos UNIFEI (expertinos.unifei@gmail.com)
+ */
+
+#ifndef MURDOCH_H_
+#define MURDOCH_H_
+
+class Murdoch {
+
+public:
+
+	Murdoch();
+	~Murdoch();
+
+	void spin();
+	void spinOnce();
+
+private:
+
+	ros::NodeHandle nh_;
+
+	AmigoBot amg_bot_1_;
+	AmigoBot amg_bot_2_;
+	AmigoBot amg_bot_3_;
+//	P3_DX p3_dx_;
+//	Robotino robotino_;
+
+	void readParameters();	
+
+};
+
+#endif /* ARENA_UNIFEI_H_ */

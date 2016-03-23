@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+	<group ns="robot0">
+		<include file="$(find coop_pkg)/launch/robot_node.launch">
+			<arg name="_ns" value="robot0/"/>
+			<arg name="_name" value="robotname0"/>
+			<arg name="_id" value="123"/>
+			<arg name="_busy" value="false"/>
+			<arg name="_skill_level_0" value="6"/>
+			<arg name="_skill_resource_id_0" value="123"/>
+			<arg name="_skill_resource_name_0" value="velocidade"/>
+			<arg name="_skill_resource_description_0" value="asdasdasd"/>
+			<arg name="_skill_level_1" value="9"/>
+			<arg name="_skill_resource_id_1" value="124"/>
+			<arg name="_skill_resource_name_1" value="forca"/>
+			<arg name="_skill_resource_description_1" value="werwerwerwer"/>
+		</include>
+	</group>
+</launch>

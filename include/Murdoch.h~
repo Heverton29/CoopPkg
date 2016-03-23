@@ -1,0 +1,39 @@
+/**
+ *  ArenaUnifei.h
+ *
+ *  Version: 1.0.0.0
+ *  Created on: 20/05/2015
+ *  Modified on: 20/05/2015
+ *  Author: Heverton Machado Soares (sm.heverton@gmail.com)
+ *  Maintainer: Expertinos UNIFEI (expertinos.unifei@gmail.com)
+ */
+
+#ifndef MURDOCH_H_
+#define MURDOCH_H_
+
+#include "coop_pkg/Task.h"
+#include <vector>
+
+class Murdoch {
+
+public:
+
+	Murdoch(std::vector<std::string> recursos);
+	~Murdoch();
+
+	void spin();
+	void spinOnce();
+	void setTask();
+	void publishTask();
+
+private:
+
+	ros::NodeHandle nh_;
+	coop_pkg::Task task_msg_;
+	ros::Publisher task_pub_;
+	
+	void readParameters();	
+
+};
+
+#endif /* MURDOCH_H_ */

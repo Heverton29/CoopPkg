@@ -1,0 +1,34 @@
+#include <ros/ros.h>
+
+#include "coop_pkg/Robot.h"
+
+
+int main(int argc, char **argv)
+{
+	ros::init(argc, argv, "info_robot");
+
+	ros::NodeHandle n;
+
+	ros::Publisher chatter_pub = n.advertise<coop_pkg::Robot>("chatter", 1);
+	ros::Rate loop_rate(10);
+
+	while (ros::ok())
+	{
+		coop_pkg::Robot msg;
+		msg.name = "robot";
+		msg.forca = 2;
+		msg.inteligencia = 5;
+		msg.massa = 3;
+		msg.agilidade = 2;
+		msg.is_holonomic = false;
+		
+		ROS_INFO("Name = %s, Força = %d, Inteligencia = %d, Massa = %d, Agilidade = %d", 
+			msg.name.c_str(), msg.forca, 				msg.inteligencia, msg.massa, 				msg.agilidade);		
+		
+		chatter_pub.publish(msg);
+
+		ros::spinOnce();
+		loop_rate.sleep();
+	}
+	return 0;
+}
