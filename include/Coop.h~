@@ -48,7 +48,6 @@ private:
 	ros::Subscriber info_task_sub_;
 	ros::Publisher task_state_pub_;
 	std::vector<ros::ServiceClient> set_busy_clis_;
-	std::vector<ros::ServiceClient> set_state_clis_;
 
 	void readParameters();
 
