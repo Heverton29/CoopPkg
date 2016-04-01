@@ -47,6 +47,7 @@ public:
 
 	bool addSkill(Skill new_skill);
 	bool removeSkill(Skill skill);
+	std::vector<Skill> getSkills();
 
 	bool equals(Task task);
 
@@ -72,6 +73,8 @@ private:
 
 	TaskState getState(int code);
 	bool isComplete(TaskState state);
+
+	ros::ServiceServer set_state_srv_;
 };
 
 #endif /* TASK_H_ */

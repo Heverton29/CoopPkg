@@ -3,7 +3,7 @@
  *
  *  Version: 1.0.0.0
  *  Created on: 02/07/2015
- *  Modified on: 04/08/2015
+ *  Modified on: 01/04/2016
  *  Author: Heverton Machado Soares (sm.heverton@gmail.com)
  *  Maintainer: Expertinos UNIFEI (expertinos.unifei@gmail.com)
  */
@@ -39,10 +39,11 @@ void Coop::spin() {
 	ROS_INFO("Coop Node is up and running!!!");
 	ros::Rate loop_rate(10.0);	
 	while (ros::ok()) {
-		alocateRobotForAllTasks(robots_, tasks_);
 		checkLoggedRobots();
 		checkIddleRobots();
 		checkTasks();
+		alocateRobotForAllTasks(robots_, tasks_);
+		publishTaskState();
 		spinOnce();		
 		loop_rate.sleep();
 	}
@@ -60,10 +61,9 @@ void Coop::spinOnce() {
  */
 void Coop::separatePossibleRobots(std::vector<Robot> robots, Task task) {
 	for(int i = 0; i < robots.size(); i++){	
-		Robot robot = robots.at(i);		
-		if(robot.hasAllSkills(task) && robot.getBusy() == false){
-			competing_robots_.push_back(robot);
-			//ROS_INFO("TA AQUI");
+		Robot possible_robot = robots.at(i);		
+		if(possible_robot.hasAllSkills(task) && possible_robot.getBusy() == false){
+			competing_robots_.push_back(possible_robot);
 		}
 	}
 }
@@ -75,13 +75,26 @@ void Coop::alocateRobotForATask(std::vector<Robot> robots, Task task) {
 	Robot best_robot;	
 	separatePossibleRobots(robots, task);
 	for(int i = 0; i < competing_robots_.size(); i++){	
-		Robot robot = robots.at(i);		
-		if(robot.isTheBest(competing_robots_, task)){
-			robot.setBusy(true);
-			task.setState(EXECUTING);
+		Robot robot = competing_robots_.at(i);		
+		if(competing_robots_.at(i).isTheBest(competing_robots_, task)){
+			assignRobots(robot);
+			setLocalTaskState(task);
+			ROS_INFO("Robot: %s", robot.getName().c_str());
 			break;
 		}
 	}
+}
+
+void Coop::setLocalTaskState(Task task) {
+	int set_state_position;
+	for (int i = 0; i < tasks_.size(); i++) {
+		if (task.getId() == tasks_.at(i).getId()) {
+			set_state_position = i;
+			break;
+		}
+	}
+	tasks_.at(set_state_position).setState(EXECUTING);
+	std::cout<<"state of the Task: "<<tasks_.at(0).getId()<<"= "<<tasks_.at(0).getState()<<"\n";
 }
 
 /**
@@ -89,24 +102,27 @@ void Coop::alocateRobotForATask(std::vector<Robot> robots, Task task) {
  */
 void Coop::alocateRobotForAllTasks(std::vector<Robot> robots, std::vector<Task> tasks) {
 	for(int i = 0; i < tasks.size(); i++){	
-		Task task = tasks.at(i);	
+		Task task = tasks.at(i);
 		if(task.getState() == NOT_ASSIGNED) { 	
 			alocateRobotForATask(robots, task);
 		}	
 	}
 }
-
-bool Coop::assignRobots(Task task) {
-	/*
+void Coop::assignRobots(Robot robot) {
+	int id_set_busy;
+	id_set_busy == 0;
+	for (int i = 0; i < robots_.size(); i++) {
+		if (robot.getNamespace() == robots_.at(i).getNamespace()) {
+			id_set_busy = i;
+			break;
+		}
+	}
 	coop_pkg::SetBusy busy_srv;
 	busy_srv.request.busy = true;
-	if (set_busy_cli.call(busy_srv))
-	{
+	if (set_busy_clis_.at(id_set_busy).call(busy_srv)) {
 		ROS_INFO("OK: %s!!!", robot.getName().c_str());
 	}
-	*/
 }
-
 /**
  *
  */
@@ -134,6 +150,12 @@ void Coop::checkLoggedRobots()
  */
 void Coop::checkIddleRobots() 
 {
+	if(robots_.size() != 0){
+		for (int i = 0; i < robots_.size(); i++) 
+		{
+			std::cout<<robots_.at(i).getName()<<": "<<robots_.at(i).getBusy()<<"\n";
+		}
+	}
 	int number_of_iddle_robots = 0;
 	for (int i = 0; i < robots_.size(); i++) 
 	{
@@ -144,7 +166,7 @@ void Coop::checkIddleRobots()
 			number_of_iddle_robots++;
 		}
 	}
-	ROS_INFO("Number of robots: %d", number_of_iddle_robots);
+	//ROS_INFO("Number of robots: %d", number_of_iddle_robots);
 }
 
 /**
@@ -155,7 +177,12 @@ void Coop::checkTasks()
 	for (int i = 0; i < tasks_.size(); i++) 
 	{
 		Task task(tasks_.at(i));
-		ROS_INFO("%s is available", task.getName().c_str());
+		if (task.getState() != NOT_ASSIGNED) {
+			ROS_INFO("%s is not available", task.getName().c_str());
+		}
+		else {
+			ROS_INFO("%s is available", task.getName().c_str());
+		}		
 		if(task.isExpired())
 		{
 			tasks_.erase(tasks_.begin() + i);
@@ -278,10 +305,12 @@ void Coop::infoTaskCallback(const coop_pkg::Task::ConstPtr& msg)
 	Task task(msg);
 	for (int i = 0; i < tasks_.size(); i++) {
 		if(task == tasks_.at(i)) {
+			TaskState state = tasks_.at(i).getState();
 			tasks_.erase(tasks_.begin()+i);
 			if(task.getState() != ABORTED && task.getState() != FAILED && task.getState() != SUCCEEDED)   {
-				tasks_.push_back(task);		
-			}
+				tasks_.push_back(task);
+				tasks_.at(i).setState(state);		
+			}		
 			return;		
 		}	
 	}

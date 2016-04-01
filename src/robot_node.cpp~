@@ -17,8 +17,8 @@ int main(int argc, char** argv)
 	skills.push_back(Skill(Resource(777, "resourc_3", " "), 4));
 	Robot robot_1("robot_1", 1234, false,   skills);*/
 	ros::init(argc, argv, "robot_node");
-	//ros::NodeHandle nh;
-	RobotNode robot();
+	ros::NodeHandle nh;
+	RobotNode robot(nh);
 	robot.spin();
 	return 0;
 }

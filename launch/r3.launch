@@ -6,7 +6,7 @@
 			<arg name="_name" value="robotname3"/>
 			<arg name="_id" value="114"/>
 			<arg name="_busy" value="false"/>
-			<arg name="_skill_level_0" value="6"/>
+			<arg name="_skill_level_0" value="5"/>
 			<arg name="_skill_resource_id_0" value="111"/>
 			<arg name="_skill_resource_name_0" value="velocidade"/>
 			<arg name="_skill_resource_description_0" value="velocidade do robo"/>

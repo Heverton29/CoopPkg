@@ -20,6 +20,7 @@
 #include "coop_pkg/Robot.h"
 #include "coop_pkg/Task.h"
 #include "coop_pkg/SetBusy.h"
+#include "coop_pkg/SetState.h"
 
 class Coop {
 
@@ -57,7 +58,7 @@ private:
 	std::vector<Robot> getRobots();
 	void checkLoggedRobots();
 	void checkIddleRobots();
-	bool assignRobots(Task task);
+	void assignRobots(Robot robot);
 	void separatePossibleRobots(std::vector<Robot> robots, Task task);
 	void alocateRobotForATask(std::vector<Robot> robots, Task task);
 	void alocateRobotForAllTasks(std::vector<Robot> robots, std::vector<Task> tasks);
@@ -67,6 +68,7 @@ private:
 	std::vector<Task> getTasks();
 	void publishTaskState();
 	void checkTasks();
+	void setLocalTaskState(Task task);
 	
 	std::vector<RobotsPerTask> getRobotsPerTasks();	
 	

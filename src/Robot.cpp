@@ -3,7 +3,7 @@
  *
  *  Version: 1.0.0.0
  *  Created on: 16/03/2015
- *  Modified on: 04/08/2015
+ *  Modified on: 01/04/2016
  *  Author: Heverton Machado Soares (sm.heverton@gmail.com)
  *  Maintainer: Expertinos UNIFEI (expertinos.unifei@gmail.com)
  */
@@ -48,7 +48,6 @@ Robot::Robot(const coop_pkg::Robot::ConstPtr& msg) {
 Robot::~Robot() {
 }
 
-/***************************** Essa função tem que ser revista... acho q esta errada *********************************************/
 bool Robot::isTheBest(std::vector<Robot> robots, Task task) {
 	Robot robot_(ns_, name_, id_, busy_, skills_);	
 	for(int i = 0; i < robots.size(); i++) {
@@ -96,11 +95,10 @@ bool Robot::hasAllSkills(Task task)
 	std::vector<Skill> skills = task.getSkills();
 	for (int i = 0; i < skills.size(); i++) {
 		Skill skill = skills.at(i);		
-		if (robot_.hasSkill(skill)) {
+		if (!robot_.hasSkill(skill)) {
 			return false;
 		}
 	}
-	//ROS_INFO("Teve_SKILL");
 	return true;	
 }
 
@@ -124,7 +122,7 @@ double Robot::calculateEachFitness(Skill skill)
 
 /**
  *
- */
+ *//***************************** Essa função tem que ser revisada... acho q esta errada *********************************************/
 double Robot::calculateFitness(Task task)
 {
 	Robot robot_(ns_, name_, id_, busy_, skills_);	

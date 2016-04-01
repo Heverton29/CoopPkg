@@ -21,6 +21,7 @@ add_service_files(
 	FILES
 	AddSkill.srv
 	SetBusy.srv
+	SetState.srv
 )
 
 generate_messages(
@@ -57,6 +58,7 @@ add_executable(robot_node
 		src/Robot.cpp
 		src/Resource.cpp
 		src/Skill.cpp
+		src/Task.cpp
 		)
 
 target_link_libraries(robot_node
