@@ -22,4 +22,6 @@
 	</include>
 	<include file="$(find coop_pkg)/launch/r9.launch">
 	</include>
+	<include file="$(find coop_pkg)/launch/task_node.launch">
+	</include>
 </launch>

@@ -14,14 +14,6 @@
 	</include>
 	<include file="$(find coop_pkg)/launch/r5.launch">
 	</include>
-	<include file="$(find coop_pkg)/launch/r6.launch">
-	</include>
-	<include file="$(find coop_pkg)/launch/r7.launch">
-	</include>
-	<include file="$(find coop_pkg)/launch/r8.launch">
-	</include>
-	<include file="$(find coop_pkg)/launch/r9.launch">
-	</include>
 	<include file="$(find coop_pkg)/launch/task_node.launch">
 	</include>
 </launch>

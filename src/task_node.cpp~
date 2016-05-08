@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
 	pose0.x = 1.0;
 	pose0.y = 0.3;
 	pose0.theta = 0.4; //rads
-/*
+
 	geometry_msgs::Pose2D pose1;
 	pose0.x = 5.0;
 	pose0.y = 0.5;
@@ -77,19 +77,19 @@ int main(int argc, char** argv) {
 	pose0.x = 0.0;
 	pose0.y = 3.0;
 	pose0.theta = 0.6; //rads
-*/	
-	ros::Duration duration0(100);
+	
+	ros::Duration duration0(1000);
 	ros::Time deadline0 = ros::Time::now() + duration0;
 	
 	std::vector<Skill> skills0;
-//	std::vector<Skill> skills1;
-//	std::vector<Skill> skills2;
+	std::vector<Skill> skills1;
+	std::vector<Skill> skills2;
 
-	Skill skill00(resource0, 5);
+	Skill skill00(resource0, 6);
 	skills0.push_back(skill00);
-	Skill skill01(resource1, 2);
+	Skill skill01(resource1, 9);
 	skills0.push_back(skill01);
-/*
+
 	Skill skill10(resource0, 7);
 	skills1.push_back(skill10);
 	Skill skill11(resource2, 7);
@@ -101,14 +101,14 @@ int main(int argc, char** argv) {
 	skills2.push_back(skill21);
 	Skill skill22(resource2, 2);
 	skills2.push_back(skill22);
-*/	
+	
 	Task task0("Task0", 211, pose0, deadline0, skills0);
 	tasks.push_back(task0);
-/*	Task task1("Task1", 212, pose1, deadline0, skills1);
+	Task task1("Task1", 212, pose1, deadline0, skills1);
 	tasks.push_back(task1);
 	Task task2("Task2", 213, pose1, deadline0, skills2);
 	tasks.push_back(task2);
-*/
+
 	while (nh.ok()) {
 		Task task = tasks.at(random(0, tasks.size()));
 		task.setState(NOT_ASSIGNED);

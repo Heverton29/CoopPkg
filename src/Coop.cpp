@@ -60,11 +60,15 @@ void Coop::spinOnce() {
  *
  */
 void Coop::separatePossibleRobots(std::vector<Robot> robots, Task task) {
+	competing_robots_.clear();	
 	for(int i = 0; i < robots.size(); i++){	
 		Robot possible_robot = robots.at(i);		
 		if(possible_robot.hasAllSkills(task) && possible_robot.getBusy() == false){
 			competing_robots_.push_back(possible_robot);
 		}
+	}
+	for(int i = 0; i<competing_robots_.size(); i++){
+		ROS_INFO("Competing Robot: %s", competing_robots_.at(i).getName().c_str());
 	}
 }
 
@@ -94,7 +98,6 @@ void Coop::setLocalTaskState(Task task) {
 		}
 	}
 	tasks_.at(set_state_position).setState(EXECUTING);
-	std::cout<<"state of the Task: "<<tasks_.at(0).getId()<<"= "<<tasks_.at(0).getState()<<"\n";
 }
 
 /**
@@ -108,6 +111,7 @@ void Coop::alocateRobotForAllTasks(std::vector<Robot> robots, std::vector<Task> 
 		}	
 	}
 }
+
 void Coop::assignRobots(Robot robot) {
 	int id_set_busy;
 	id_set_busy == 0;
@@ -123,6 +127,7 @@ void Coop::assignRobots(Robot robot) {
 		ROS_INFO("OK: %s!!!", robot.getName().c_str());
 	}
 }
+
 /**
  *
  */
@@ -130,14 +135,13 @@ void Coop::checkLoggedRobots()
 {
 	for (int i = 0; i < robots_.size(); i++) 
 	{
-		Robot robot(robots_.at(i));
 		//ROS_INFO("%s is logged!!!", robot.getName().c_str());
-		if(!robot.isStillLogged())
+		if(!robots_.at(i).isStillLogged())
 		{
 			robots_.erase(robots_.begin() + i);
 			set_busy_clis_.at(i).shutdown();
 			set_busy_clis_.erase(set_busy_clis_.begin() + i);
-			ROS_INFO("%s is not logged anymore!!!", robot.getName().c_str());
+			ROS_INFO("%s is not logged anymore!!!", robots_.at(i).getName().c_str());
 		}
 	}
 	int number_of_logged_robots = robots_.size();
@@ -308,8 +312,8 @@ void Coop::infoTaskCallback(const coop_pkg::Task::ConstPtr& msg)
 			TaskState state = tasks_.at(i).getState();
 			tasks_.erase(tasks_.begin()+i);
 			if(task.getState() != ABORTED && task.getState() != FAILED && task.getState() != SUCCEEDED)   {
-				tasks_.push_back(task);
-				tasks_.at(i).setState(state);		
+				task.setState(state);
+				tasks_.push_back(task);		
 			}		
 			return;		
 		}	

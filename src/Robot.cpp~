@@ -3,7 +3,7 @@
  *
  *  Version: 1.0.0.0
  *  Created on: 16/03/2015
- *  Modified on: 04/08/2015
+ *  Modified on: 01/04/2016
  *  Author: Heverton Machado Soares (sm.heverton@gmail.com)
  *  Maintainer: Expertinos UNIFEI (expertinos.unifei@gmail.com)
  */
@@ -65,7 +65,7 @@ bool Robot::isTheBest(std::vector<Robot> robots, Task task) {
 bool Robot::hasSkill(Skill skill)
 {
 	for (int i = 0; i < skills_.size(); i++) {
-		if (skills_.at(i) == skill){
+		if (skills_.at(i) == skill && skills_.at(i).getLevel() != 0){
 			return true;			
 		}
 	}
@@ -108,7 +108,7 @@ bool Robot::hasAllSkills(Task task)
 double Robot::calculateEachFitness(Skill skill)
 {	
 	Robot robot_(ns_, name_, id_, busy_, skills_);
-	bool fitness = 0.0;
+	double fitness = 0.0;
 	for (int i = 0; i < robot_.getSkills().size(); i++) {
 		Skill skill_ = robot_.getSkills().at(i);		
 		if (skill_ == skill){
@@ -117,12 +117,11 @@ double Robot::calculateEachFitness(Skill skill)
 		}
 	}
 	return fitness;
-	//return -100;
 }
 
 /**
  *
- *//***************************** Essa função tem que ser revisada... acho q esta errada *********************************************/
+ */
 double Robot::calculateFitness(Task task)
 {
 	Robot robot_(ns_, name_, id_, busy_, skills_);	
